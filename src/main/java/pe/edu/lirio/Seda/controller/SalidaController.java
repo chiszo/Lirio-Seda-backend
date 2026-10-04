@@ -3,7 +3,6 @@ package pe.edu.lirio.Seda.controller;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -83,7 +82,6 @@ public class SalidaController extends AbstractCrudController<Salida, String, Sal
 
     @Override
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @Transactional
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void eliminar(@PathVariable String id) {

@@ -2,7 +2,6 @@ package pe.edu.lirio.Seda.controller;
 
 import java.util.List;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,7 +41,6 @@ public abstract class AbstractCrudController<T, ID, D> {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @Transactional
     @ResponseStatus(HttpStatus.CREATED)
     public D crear(@RequestBody D dto) {
@@ -50,7 +48,6 @@ public abstract class AbstractCrudController<T, ID, D> {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @Transactional
     public D actualizar(@PathVariable String id, @RequestBody D dto) {
         ID parsedId = parseId(id);
@@ -61,7 +58,6 @@ public abstract class AbstractCrudController<T, ID, D> {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @Transactional
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void eliminar(@PathVariable String id) {

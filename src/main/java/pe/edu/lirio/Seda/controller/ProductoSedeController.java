@@ -2,7 +2,6 @@ package pe.edu.lirio.Seda.controller;
 
 import java.util.List;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,7 +51,6 @@ public class ProductoSedeController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @Transactional
     @ResponseStatus(HttpStatus.CREATED)
     public ProductoSedeDTO crear(@RequestBody ProductoSedeDTO dto) {
@@ -60,7 +58,6 @@ public class ProductoSedeController {
     }
 
     @PutMapping("/{idProducto}/{idSede}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @Transactional
     public ProductoSedeDTO actualizar(
             @PathVariable String idProducto,
@@ -76,7 +73,6 @@ public class ProductoSedeController {
     }
 
     @DeleteMapping("/{idProducto}/{idSede}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @Transactional
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void eliminar(@PathVariable String idProducto, @PathVariable Integer idSede) {

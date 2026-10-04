@@ -25,6 +25,12 @@ public class SecurityConfig {
 				.authorizeHttpRequests(authorize -> authorize
 						.requestMatchers("/api/auth/**", "/error").permitAll()
 						.requestMatchers("/api/usuarios/**").hasAuthority("ROLE_ADMIN")
+						.requestMatchers(HttpMethod.POST, "/api/roles/**", "/api/modelos/**", "/api/sedes/**", "/api/estados/**", "/api/motivos/**").hasAuthority("ROLE_ADMIN")
+						.requestMatchers(HttpMethod.PUT, "/api/roles/**", "/api/modelos/**", "/api/sedes/**", "/api/estados/**", "/api/motivos/**").hasAuthority("ROLE_ADMIN")
+						.requestMatchers(HttpMethod.DELETE, "/api/roles/**", "/api/modelos/**", "/api/sedes/**", "/api/estados/**", "/api/motivos/**").hasAuthority("ROLE_ADMIN")
+						.requestMatchers(HttpMethod.POST, "/api/productos/**", "/api/productos-sedes/**", "/api/proveedores/**", "/api/entradas/**", "/api/salidas/**", "/api/pedidos/**", "/api/detalles-entrada/**", "/api/detalles-salida/**", "/api/detalles-pedido/**").authenticated()
+						.requestMatchers(HttpMethod.PUT, "/api/productos/**", "/api/productos-sedes/**", "/api/proveedores/**", "/api/entradas/**", "/api/salidas/**", "/api/pedidos/**", "/api/detalles-entrada/**", "/api/detalles-salida/**", "/api/detalles-pedido/**").authenticated()
+						.requestMatchers(HttpMethod.DELETE, "/api/productos/**", "/api/productos-sedes/**", "/api/proveedores/**", "/api/entradas/**", "/api/salidas/**", "/api/pedidos/**", "/api/detalles-entrada/**", "/api/detalles-salida/**", "/api/detalles-pedido/**").authenticated()
 						.requestMatchers(HttpMethod.POST, "/api/**").hasAuthority("ROLE_ADMIN")
 						.requestMatchers(HttpMethod.PUT, "/api/**").hasAuthority("ROLE_ADMIN")
 						.requestMatchers(HttpMethod.DELETE, "/api/**").hasAuthority("ROLE_ADMIN")

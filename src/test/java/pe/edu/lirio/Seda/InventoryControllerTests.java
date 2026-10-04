@@ -32,6 +32,10 @@ import pe.edu.lirio.Seda.model.bd.Roles;
 import pe.edu.lirio.Seda.model.bd.Sede;
 import pe.edu.lirio.Seda.model.bd.Usuarios;
 import pe.edu.lirio.Seda.repository.EstadoRepository;
+import pe.edu.lirio.Seda.repository.DetalleEntradaRepository;
+import pe.edu.lirio.Seda.repository.DetalleSalidaRepository;
+import pe.edu.lirio.Seda.repository.DetallePedidoRepository;
+import pe.edu.lirio.Seda.repository.EntradaRepository;
 import pe.edu.lirio.Seda.repository.MarcaRepository;
 import pe.edu.lirio.Seda.repository.MotivoRepository;
 import pe.edu.lirio.Seda.repository.ProductoRepository;
@@ -76,6 +80,18 @@ class InventoryControllerTests {
     @Autowired
     private ProductoSedeRepository productoSedeRepository;
 
+    @Autowired
+    private DetalleEntradaRepository detalleEntradaRepository;
+
+    @Autowired
+    private DetalleSalidaRepository detalleSalidaRepository;
+
+    @Autowired
+    private DetallePedidoRepository detallePedidoRepository;
+
+    @Autowired
+    private EntradaRepository entradaRepository;
+
     private Usuarios admin;
     private Producto producto;
     private Sede sede;
@@ -106,7 +122,7 @@ class InventoryControllerTests {
         admin = usuariosRepository.save(admin);
 
         Proveedor proveedor = new Proveedor();
-        proveedor.setIdProveedor("A001");
+        proveedor.setIdProveedor("P001");
         proveedor.setNombre("Proveedor de pruebas");
         proveedorRepository.save(proveedor);
 
@@ -171,10 +187,10 @@ class InventoryControllerTests {
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(roles = "USER")
     void movimientosActualizanStockPorSedeYValidanSalidas() throws Exception {
         mockMvc.perform(post("/api/entradas")
-                        .with(user("admin").roles("ADMIN"))
+              .with(user("almacenero").roles("USER"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(entradaJson(3)))
                 .andExpect(status().isCreated())
@@ -182,7 +198,7 @@ class InventoryControllerTests {
         assertEquals(13, stockEnSede());
 
         mockMvc.perform(put("/api/entradas/ENT0001")
-                        .with(user("admin").roles("ADMIN"))
+                        .with(user("almacenero").roles("USER"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(entradaJson(2)))
                 .andExpect(status().isOk())
@@ -190,33 +206,33 @@ class InventoryControllerTests {
         assertEquals(12, stockEnSede());
 
         mockMvc.perform(post("/api/salidas")
-                        .with(user("admin").roles("ADMIN"))
+                        .with(user("almacenero").roles("USER"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(salidaJson(13)))
                 .andExpect(status().isConflict());
         assertEquals(12, stockEnSede());
 
         mockMvc.perform(post("/api/salidas")
-                        .with(user("admin").roles("ADMIN"))
+                        .with(user("almacenero").roles("USER"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(salidaJson(5)))
                 .andExpect(status().isCreated());
         assertEquals(7, stockEnSede());
 
-        mockMvc.perform(delete("/api/salidas/SAL0001").with(user("admin").roles("ADMIN")))
+        mockMvc.perform(delete("/api/salidas/SAL0001").with(user("almacenero").roles("USER")))
           .andExpect(status().isNoContent());
         assertEquals(12, stockEnSede());
 
-        mockMvc.perform(delete("/api/entradas/ENT0001").with(user("admin").roles("ADMIN")))
+        mockMvc.perform(delete("/api/entradas/ENT0001").with(user("almacenero").roles("USER")))
           .andExpect(status().isNoContent());
         assertEquals(10, stockEnSede());
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(roles = "USER")
     void pedidoSeVinculaConUsuarioYEstadoConDetalleSoloCantidad() throws Exception {
         mockMvc.perform(post("/api/pedidos")
-                        .with(user("admin").roles("ADMIN"))
+              .with(user("vendedor").roles("USER"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -232,12 +248,171 @@ class InventoryControllerTests {
                 .andExpect(jsonPath("$.detalles[0].cantidad").value(4));
     }
 
+        @Test
+        @WithMockUser(roles = "USER")
+        void usuarioAutenticadoPuedeModificarProductosProveedoresYStockPorSede() throws Exception {
+      mockMvc.perform(post("/api/productos")
+          .with(user("almacenero").roles("USER"))
+          .contentType(MediaType.APPLICATION_JSON)
+          .content("""
+            {"idProducto":"PR02","nombre":"Nuevo","idModelo":%d,"precio":12.50,"estado":"A"}
+            """.formatted(producto.getModelo().getIdModelo())))
+        .andExpect(status().isCreated());
+
+      mockMvc.perform(put("/api/productos/PR02")
+          .with(user("almacenero").roles("USER"))
+          .contentType(MediaType.APPLICATION_JSON)
+          .content("""
+            {"nombre":"Actualizado","idModelo":%d,"precio":15.00,"estado":"A"}
+            """.formatted(producto.getModelo().getIdModelo())))
+        .andExpect(status().isOk());
+
+      mockMvc.perform(post("/api/productos-sedes")
+          .with(user("almacenero").roles("USER"))
+          .contentType(MediaType.APPLICATION_JSON)
+          .content("""
+            {"idProducto":"PR02","idSede":%d,"stock":8}
+            """.formatted(sede.getIdSede())))
+        .andExpect(status().isCreated());
+
+      mockMvc.perform(put("/api/productos-sedes/PR02/" + sede.getIdSede())
+          .with(user("almacenero").roles("USER"))
+          .contentType(MediaType.APPLICATION_JSON)
+          .content("""
+            {"stock":9}
+            """))
+        .andExpect(status().isOk());
+
+      mockMvc.perform(delete("/api/productos-sedes/PR02/" + sede.getIdSede())
+          .with(user("almacenero").roles("USER")))
+        .andExpect(status().isNoContent());
+
+      mockMvc.perform(delete("/api/productos/PR02").with(user("almacenero").roles("USER")))
+        .andExpect(status().isNoContent());
+
+      mockMvc.perform(put("/api/proveedores/P001")
+          .with(user("almacenero").roles("USER"))
+          .contentType(MediaType.APPLICATION_JSON)
+          .content("""
+            {"nombre":"Proveedor actualizado","telefono":"999","correo":"proveedor@test.local","direccion":"Local","ruc":"RUC1"}
+            """))
+        .andExpect(status().isOk());
+
+      mockMvc.perform(post("/api/proveedores")
+          .with(user("almacenero").roles("USER"))
+          .contentType(MediaType.APPLICATION_JSON)
+          .content("""
+            {"idProveedor":"P002","nombre":"Otro proveedor","telefono":"111","correo":"otro@test.local","direccion":"Local","ruc":"RUC2"}
+            """))
+        .andExpect(status().isCreated());
+
+      mockMvc.perform(delete("/api/proveedores/P002").with(user("almacenero").roles("USER")))
+        .andExpect(status().isNoContent());
+        }
+
+        @Test
+        @WithMockUser(roles = "USER")
+        void usuarioAutenticadoPuedeCrearEditarYEliminarDetallesConIntegridad() throws Exception {
+      mockMvc.perform(post("/api/entradas")
+          .with(user("almacenero").roles("USER"))
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(entradaJson(3)))
+        .andExpect(status().isCreated());
+
+      mockMvc.perform(post("/api/detalles-entrada")
+          .with(user("almacenero").roles("USER"))
+          .contentType(MediaType.APPLICATION_JSON)
+          .content("""
+            {"cantidad":1,"precioUnitario":2.25,"idEntrada":"ENT0001","idProducto":"P001"}
+            """))
+        .andExpect(status().isCreated());
+      assertEquals(14, stockEnSede());
+      assertEquals(new BigDecimal("9.00"), entradaRepository.findById("ENT0001").orElseThrow().getImporteTotal());
+
+      Integer idDetalleEntrada = detalleEntradaRepository.findAllByEntrada_IdEntrada("ENT0001").stream()
+        .filter(detalle -> detalle.getCantidad() == 1).findFirst().orElseThrow().getIdDetalleEntrada();
+      mockMvc.perform(put("/api/detalles-entrada/" + idDetalleEntrada)
+          .with(user("almacenero").roles("USER"))
+          .contentType(MediaType.APPLICATION_JSON)
+          .content("""
+            {"cantidad":2,"precioUnitario":2.25,"idEntrada":"ENT0001","idProducto":"P001"}
+            """))
+        .andExpect(status().isOk());
+      assertEquals(15, stockEnSede());
+      assertEquals(new BigDecimal("11.25"), entradaRepository.findById("ENT0001").orElseThrow().getImporteTotal());
+
+      mockMvc.perform(delete("/api/detalles-entrada/" + idDetalleEntrada)
+          .with(user("almacenero").roles("USER")))
+        .andExpect(status().isNoContent());
+      assertEquals(13, stockEnSede());
+      assertEquals(new BigDecimal("6.75"), entradaRepository.findById("ENT0001").orElseThrow().getImporteTotal());
+
+      mockMvc.perform(post("/api/salidas")
+          .with(user("almacenero").roles("USER"))
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(salidaJson(2)))
+        .andExpect(status().isCreated());
+
+      mockMvc.perform(post("/api/detalles-salida")
+          .with(user("almacenero").roles("USER"))
+          .contentType(MediaType.APPLICATION_JSON)
+          .content("""
+            {"cantidad":1,"idProducto":"P001","idSalida":"SAL0001"}
+            """))
+        .andExpect(status().isCreated());
+      assertEquals(10, stockEnSede());
+
+      Integer idDetalleSalida = detalleSalidaRepository.findAllBySalida_IdSalida("SAL0001").stream()
+        .filter(detalle -> detalle.getCantidad() == 1).findFirst().orElseThrow().getIdDetalleSalida();
+      mockMvc.perform(put("/api/detalles-salida/" + idDetalleSalida)
+          .with(user("almacenero").roles("USER"))
+          .contentType(MediaType.APPLICATION_JSON)
+          .content("""
+            {"cantidad":2,"idProducto":"P001","idSalida":"SAL0001"}
+            """))
+        .andExpect(status().isOk());
+      assertEquals(9, stockEnSede());
+
+      mockMvc.perform(delete("/api/detalles-salida/" + idDetalleSalida)
+          .with(user("almacenero").roles("USER")))
+        .andExpect(status().isNoContent());
+      assertEquals(11, stockEnSede());
+
+      mockMvc.perform(post("/api/pedidos")
+          .with(user("vendedor").roles("USER"))
+          .contentType(MediaType.APPLICATION_JSON)
+          .content("""
+            {"idPedido":"PED0002","idSedeUsuario":%d,"idEstado":%d,"idUsuario":%d}
+            """.formatted(sede.getIdSede(), estado.getIdEstado(), admin.getIdUsuario())))
+        .andExpect(status().isCreated());
+      mockMvc.perform(post("/api/detalles-pedido")
+          .with(user("vendedor").roles("USER"))
+          .contentType(MediaType.APPLICATION_JSON)
+          .content("""
+            {"cantidad":2,"idPedido":"PED0002","idProducto":"P001"}
+            """))
+        .andExpect(status().isCreated());
+      Integer idDetallePedido = detallePedidoRepository.findAllByPedido_IdPedido("PED0002").get(0)
+        .getIdDetallePedido();
+      mockMvc.perform(put("/api/detalles-pedido/" + idDetallePedido)
+          .with(user("vendedor").roles("USER"))
+          .contentType(MediaType.APPLICATION_JSON)
+          .content("""
+            {"cantidad":3,"idPedido":"PED0002","idProducto":"P001"}
+            """))
+        .andExpect(status().isOk());
+      mockMvc.perform(delete("/api/detalles-pedido/" + idDetallePedido)
+          .with(user("vendedor").roles("USER")))
+        .andExpect(status().isNoContent());
+      assertEquals(11, stockEnSede());
+        }
+
     private String entradaJson(int cantidad) {
         return """
                 {
                   "idEntrada": "ENT0001",
                   "idSedeUsuario": %d,
-                  "idProveedor": "A001",
+                  "idProveedor": "P001",
                   "idUsuario": %d,
                   "detalles": [{
                     "idProducto": "P001",
