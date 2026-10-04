@@ -1,6 +1,5 @@
 package pe.edu.lirio.Seda.model.dto;
 
-import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,10 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DetallePedidoDTO {
-    private Integer idDetallePedido;
+    private Integer cantidad;
     private String idPedido;
     private String idProducto;
-    private Integer cantidad;
-    private BigDecimal precioUnidad;
-    private BigDecimal importe;
+    private Integer idDetallePedido;
 }

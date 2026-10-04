@@ -12,27 +12,24 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "tblproveedor")
+@Table(name = "Proveedor")
 public class Proveedor {
     @Id
-    @Column(name = "idproveedor", columnDefinition = "char(4)")
+    @Column(name = "idproveedor", length = 10)
     private String idProveedor;
 
-    @Column(length = 120, nullable = false)
+    @Column(length = 250)
     private String nombre;
 
-    @Column(length = 120)
-    private String apellido;
-
-    @Column(length = 45)
+    @Column(length = 50)
     private String telefono;
 
-    @Column(length = 45, unique = true)
-    private String ruc;
-
-    @Column(length = 70)
+    @Column(length = 150)
     private String correo;
 
-    @Column(length = 70)
+    @Column(length = 250)
     private String direccion;
+
+    @Column(length = 20)
+    private String ruc;
 }

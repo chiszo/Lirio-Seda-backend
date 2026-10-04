@@ -31,7 +31,7 @@ public class DetalleSalidaController {
     }
 
     private DetalleSalidaDTO toDto(DetalleSalida entity) {
-        return new DetalleSalidaDTO(entity.getIdDetalleSalida(), entity.getSalida().getIdSalida(),
-                entity.getProducto().getIdProducto(), entity.getCantidad(), entity.getPrecioUnidad(), entity.getImporte());
+        return new DetalleSalidaDTO(entity.getCantidad(), entity.getProducto().getIdProducto(),
+            entity.getSalida().getIdSalida(), entity.getIdDetalleSalida());
     }
 }

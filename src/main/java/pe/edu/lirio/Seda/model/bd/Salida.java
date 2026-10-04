@@ -9,8 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
@@ -21,28 +20,25 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "tblsalida")
+@Table(name = "Salida")
 public class Salida {
     @Id
-    @Column(name = "idsalida", columnDefinition = "char(6)")
+    @Column(name = "idsalida", length = 10)
     private String idSalida;
 
-    @Column(name = "fechasalida", nullable = false)
-    private LocalDateTime fechaSalida;
+    @Column(name = "fechasalida")
+    private LocalDate fechaSalida;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_usuario", nullable = false)
+    @JoinColumn(name = "Usuario_idusuario", nullable = false)
     private Usuarios usuario;
 
+    @Column(name = "idsedesuario")
+    private Integer idSedeUsuario;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idsede")
-    private Sede sede;
-
-    @Column(length = 120)
-    private String destino;
-
-    @Column(name = "importetotal", nullable = false, precision = 10, scale = 2)
-    private BigDecimal importeTotal = BigDecimal.ZERO;
+    @JoinColumn(name = "Motivo_idmotivo", nullable = false)
+    private Motivo motivo;
 
     @OneToMany(mappedBy = "salida", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DetalleSalida> detalles = new ArrayList<>();

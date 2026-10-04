@@ -20,13 +20,14 @@ public class UsuarioDetailsServiceImpl implements UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Usuarios usuario = usuariosRepository.findByUsuario(username)
+        Usuarios usuario = usuariosRepository.findByCorreo(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
-        return User.withUsername(usuario.getUsuario())
-                .password(usuario.getContrasena())
+        return User.withUsername(usuario.getCorreo())
+            .password(usuario.getClave())
                 .authorities("ROLE_" + usuario.getRol().getNombre())
-                .disabled(!Boolean.TRUE.equals(usuario.getActivo()))
+            .disabled(usuario.getActivo() == null || "N".equalsIgnoreCase(usuario.getActivo())
+                || "0".equals(usuario.getActivo()))
                 .build();
     }
 }

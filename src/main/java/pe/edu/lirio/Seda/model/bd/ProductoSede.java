@@ -15,20 +15,21 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "tblproducto_sede")
+@Table(name = "ProductoSede")
 public class ProductoSede {
     @EmbeddedId
     private ProductoSedeId id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("idProducto")
-    @JoinColumn(name = "idproducto", nullable = false)
+    @JoinColumn(name = "Producto_idproducto", nullable = false)
     private Producto producto;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("idSede")
-    @JoinColumn(name = "idsede", nullable = false)
+    @JoinColumn(name = "Sede_idsede", nullable = false)
     private Sede sede;
 
+    @jakarta.persistence.Column(name = "stock")
     private Integer stock = 0;
 }

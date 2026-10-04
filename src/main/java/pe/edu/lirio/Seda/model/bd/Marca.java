@@ -14,13 +14,13 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "tblmarca")
+@Table(name = "Modelo")
 public class Marca {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idmarca")
-    private Integer idMarca;
+    @Column(name = "idmodelo")
+    private Integer idModelo;
 
-    @Column(length = 45, nullable = false, unique = true)
+    @Column(length = 150)
     private String descripcion;
 }

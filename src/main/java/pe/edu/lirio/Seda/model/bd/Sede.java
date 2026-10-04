@@ -14,19 +14,19 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "tblsede")
+@Table(name = "Sede")
 public class Sede {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idsede")
     private Integer idSede;
 
-    @Column(length = 120, nullable = false)
+    @Column(length = 250)
     private String descripcion;
 
-    @Column(length = 150)
+    @Column(length = 250)
     private String direccion;
 
-    @Column(length = 45)
+    @Column(length = 50)
     private String telefono;
 }

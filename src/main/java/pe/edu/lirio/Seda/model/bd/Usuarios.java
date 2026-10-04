@@ -9,7 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,41 +18,42 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "tblusuarios")
+@Table(name = "Usuario")
 public class Usuarios {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_usuario")
+    @Column(name = "idusuario")
     private Integer idUsuario;
 
-    @Column(length = 120, nullable = false)
+    @Column(length = 150)
     private String nombre;
 
-    @Column(length = 120, nullable = false)
+    @Column(length = 150)
     private String apellido;
 
-    @Column(length = 100, nullable = false, unique = true)
+    @Column(length = 150)
     private String correo;
 
-    @Column(length = 45)
+    @Column(length = 50)
     private String telefono;
 
-    @Column(length = 15)
-    private String dni;
+    @Column(length = 20)
+    private String documento;
 
-    @Column(length = 45, nullable = false, unique = true)
-    private String usuario;
+    @Column(name = "fechacreacion")
+    private LocalDate fechaCreacion;
 
-    @Column(length = 255, nullable = false)
-    private String contrasena;
+    @Column(length = 250)
+    private String clave;
+
+    @Column(length = 1)
+    private String activo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_rol", nullable = false)
+    @JoinColumn(name = "Rol_idrol", nullable = false)
     private Roles rol;
 
-    @Column(name = "fecha_creacion", nullable = false)
-    private LocalDateTime fechaCreacion;
-
-    @Column(nullable = false)
-    private Boolean activo = true;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "Sede_idsede", nullable = false)
+    private Sede sede;
 }

@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MarcaDTO {
-    private Integer idMarca;
+    private Integer idModelo;
     private String descripcion;
 }

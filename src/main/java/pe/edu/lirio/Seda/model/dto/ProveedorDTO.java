@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 public class ProveedorDTO {
     private String idProveedor;
     private String nombre;
-    private String apellido;
     private String telefono;
     private String ruc;
     private String correo;

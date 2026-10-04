@@ -14,16 +14,13 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "Rol")
-public class Roles {
+@Table(name = "Estado")
+public class Estado {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idrol")
-    private Integer idRol;
+    @Column(name = "idestado")
+    private Integer idEstado;
 
-    @Column(length = 510)
-    private String nombre;
-
-    @Column(length = 150)
+    @Column(length = 50)
     private String descripcion;
 }

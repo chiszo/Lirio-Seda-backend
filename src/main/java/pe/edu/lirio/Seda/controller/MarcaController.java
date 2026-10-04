@@ -7,7 +7,7 @@ import pe.edu.lirio.Seda.model.dto.MarcaDTO;
 import pe.edu.lirio.Seda.service.MarcaService;
 
 @RestController
-@RequestMapping("/api/marcas")
+@RequestMapping("/api/modelos")
 public class MarcaController extends AbstractCrudController<Marca, Integer, MarcaDTO> {
     public MarcaController(MarcaService service) {
         super(service);
@@ -21,13 +21,13 @@ public class MarcaController extends AbstractCrudController<Marca, Integer, Marc
     @Override
     protected Marca toEntity(MarcaDTO dto, Integer id) {
         Marca entity = new Marca();
-        entity.setIdMarca(id != null ? id : dto.getIdMarca());
+        entity.setIdModelo(id != null ? id : dto.getIdModelo());
         entity.setDescripcion(dto.getDescripcion());
         return entity;
     }
 
     @Override
     protected MarcaDTO toDto(Marca entity) {
-        return new MarcaDTO(entity.getIdMarca(), entity.getDescripcion());
+        return new MarcaDTO(entity.getIdModelo(), entity.getDescripcion());
     }
 }

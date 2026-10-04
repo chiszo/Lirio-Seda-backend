@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DetalleSalidaDTO {
-    private Integer cantidad;
-    private String idProducto;
-    private String idSalida;
-    private Integer idDetalleSalida;
+public class MotivoDTO {
+    private Integer idMotivo;
+    private String descripcion;
 }

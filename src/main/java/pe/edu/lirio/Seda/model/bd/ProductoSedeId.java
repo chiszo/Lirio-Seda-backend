@@ -16,9 +16,9 @@ import lombok.Setter;
 @EqualsAndHashCode
 @Embeddable
 public class ProductoSedeId implements Serializable {
-    @Column(name = "idproducto", columnDefinition = "char(4)")
+    @Column(name = "Producto_idproducto", length = 10)
     private String idProducto;
 
-    @Column(name = "idsede")
+    @Column(name = "Sede_idsede")
     private Integer idSede;
 }

@@ -1,7 +1,7 @@
 package pe.edu.lirio.Seda.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,12 +15,12 @@ public class UsuariosDTO {
     private String apellido;
     private String correo;
     private String telefono;
-    private String dni;
-    private String usuario;
+    private String documento;
+    private LocalDate fechaCreacion;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private String contrasena;
+    private String clave;
     private Integer idRol;
-    private LocalDateTime fechaCreacion;
-    private Boolean activo;
+    private Integer idSede;
+    private String activo;
 }

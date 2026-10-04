@@ -18,7 +18,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "tbldetalleentrada")
+@Table(name = "DetalleEntrada")
 public class DetalleEntrada {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,19 +26,16 @@ public class DetalleEntrada {
     private Integer idDetalleEntrada;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "identrada", nullable = false)
+    @JoinColumn(name = "Entrada_identrada", nullable = false)
     private Entrada entrada;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idproducto", nullable = false)
+    @JoinColumn(name = "Producto_idproducto", nullable = false)
     private Producto producto;
 
-    @Column(nullable = false)
+    @Column
     private Integer cantidad;
 
-    @Column(name = "preciounidad", nullable = false, precision = 10, scale = 2)
-    private BigDecimal precioUnidad;
-
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal importe;
+    @Column(name = "preciounitario", precision = 10, scale = 2)
+    private BigDecimal precioUnitario;
 }

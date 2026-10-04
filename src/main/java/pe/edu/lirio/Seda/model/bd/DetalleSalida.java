@@ -9,7 +9,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.math.BigDecimal;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,7 +17,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "tbldetallesalida")
+@Table(name = "DetalleSalida")
 public class DetalleSalida {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,19 +25,19 @@ public class DetalleSalida {
     private Integer idDetalleSalida;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idsalida", nullable = false)
+    @JoinColumn(name = "Salida_idsalida", nullable = false)
     private Salida salida;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idproducto", nullable = false)
+    @JoinColumn(name = "Producto_idproducto", nullable = false)
     private Producto producto;
 
-    @Column(nullable = false)
+    @Column
     private Integer cantidad;
 
-    @Column(name = "preciounidad", nullable = false, precision = 10, scale = 2)
-    private BigDecimal precioUnidad;
+    @Column(name = "idproducto", length = 10)
+    private String idProductoDuplicado;
 
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal importe;
+    @Column(name = "idsalida", length = 10)
+    private String idSalidaDuplicado;
 }

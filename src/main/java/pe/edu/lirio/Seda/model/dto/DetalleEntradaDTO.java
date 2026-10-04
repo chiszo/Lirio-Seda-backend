@@ -9,10 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DetalleEntradaDTO {
-    private Integer idDetalleEntrada;
+    private Integer cantidad;
+    private BigDecimal precioUnitario;
     private String idEntrada;
     private String idProducto;
-    private Integer cantidad;
-    private BigDecimal precioUnidad;
-    private BigDecimal importe;
+    private Integer idDetalleEntrada;
 }

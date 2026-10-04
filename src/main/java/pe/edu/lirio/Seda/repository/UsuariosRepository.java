@@ -5,5 +5,5 @@ import java.util.Optional;
 import pe.edu.lirio.Seda.model.bd.Usuarios;
 
 public interface UsuariosRepository extends JpaRepository<Usuarios, Integer> {
-	Optional<Usuarios> findByUsuario(String usuario);
+	Optional<Usuarios> findByCorreo(String correo);
 }

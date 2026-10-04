@@ -16,26 +16,22 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "tblproducto")
+@Table(name = "Producto")
 public class Producto {
     @Id
-    @Column(name = "idproducto", columnDefinition = "char(4)")
+    @Column(name = "idproducto", length = 10)
     private String idProducto;
 
-    @Column(length = 120, nullable = false)
+    @Column(length = 150)
     private String nombre;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idmarca", nullable = false)
-    private Marca marca;
+    @JoinColumn(name = "Modelo_idmodelo", nullable = false)
+    private Marca modelo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idproveedor")
-    private Proveedor proveedor;
+    @Column(precision = 10, scale = 2)
+    private BigDecimal precio;
 
-    @Column(nullable = false)
-    private Integer stock = 0;
-
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal precio = BigDecimal.ZERO;
+    @Column(length = 1)
+    private String estado;
 }

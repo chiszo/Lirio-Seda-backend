@@ -33,12 +33,12 @@ public class AuthController {
     public TokenResponseDTO login(@RequestBody LoginRequestDTO request) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                    request.getUsuario(), request.getContrasena()));
+                    request.getCorreo(), request.getClave()));
         } catch (AuthenticationException exception) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciales no válidas");
         }
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsuario());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(request.getCorreo());
         return new TokenResponseDTO(jwtService.generateToken(userDetails), "Bearer");
     }
 }
