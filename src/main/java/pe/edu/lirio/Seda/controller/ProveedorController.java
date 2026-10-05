@@ -33,6 +33,6 @@ public class ProveedorController extends AbstractCrudController<Proveedor, Strin
     @Override
     protected ProveedorDTO toDto(Proveedor entity) {
         return new ProveedorDTO(entity.getIdProveedor(), entity.getNombre(), entity.getTelefono(),
-            entity.getCorreo(), entity.getDireccion(), entity.getRuc());
+            entity.getRuc(), entity.getCorreo(), entity.getDireccion());
     }
 }

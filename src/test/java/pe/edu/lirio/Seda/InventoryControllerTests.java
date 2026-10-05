@@ -3,6 +3,7 @@ package pe.edu.lirio.Seda;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -161,6 +162,28 @@ class InventoryControllerTests {
     }
 
     @Test
+    void usuarioAutenticadoPuedeConsultarSuPropioPerfilYIds() throws Exception {
+        mockMvc.perform(get("/api/usuarios/me").with(user(admin.getCorreo()).roles("USER")))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.idUsuario").value(admin.getIdUsuario()))
+                .andExpect(jsonPath("$.idSede").value(sede.getIdSede()))
+                .andExpect(jsonPath("$.idRol").value(admin.getRol().getIdRol()))
+                .andExpect(jsonPath("$.correo").value(admin.getCorreo()))
+                .andExpect(jsonPath("$.clave").doesNotExist());
+    }
+
+    @Test
+    void permitePreflightCorsDesdeFrontendLocal() throws Exception {
+        mockMvc.perform(options("/api/auth/login")
+                        .header("Origin", "http://localhost:4200")
+                        .header("Access-Control-Request-Method", "POST")
+                        .header("Access-Control-Request-Headers", "authorization,content-type"))
+                .andExpect(status().isOk())
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers
+                        .header().string("Access-Control-Allow-Origin", "http://localhost:4200"));
+    }
+
+    @Test
     @WithMockUser(roles = "ADMIN")
     void actualizarUsuarioSinActivoConservaElEstadoYNoExponeClave() throws Exception {
         admin.setActivo("N");
@@ -302,9 +325,12 @@ class InventoryControllerTests {
           .with(user("almacenero").roles("USER"))
           .contentType(MediaType.APPLICATION_JSON)
           .content("""
-            {"idProveedor":"P002","nombre":"Otro proveedor","telefono":"111","correo":"otro@test.local","direccion":"Local","ruc":"RUC2"}
+            {"idProveedor":"P002","nombre":"Otro proveedor","telefono":"111","correo":"otro@test.local","direccion":"Av. Lima 123","ruc":"RUC2"}
             """))
-        .andExpect(status().isCreated());
+        .andExpect(status().isCreated())
+        .andExpect(jsonPath("$.ruc").value("RUC2"))
+        .andExpect(jsonPath("$.correo").value("otro@test.local"))
+        .andExpect(jsonPath("$.direccion").value("Av. Lima 123"));
 
       mockMvc.perform(delete("/api/proveedores/P002").with(user("almacenero").roles("USER")))
         .andExpect(status().isNoContent());
