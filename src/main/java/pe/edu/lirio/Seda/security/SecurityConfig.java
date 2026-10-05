@@ -56,7 +56,7 @@ public class SecurityConfig {
 
 	@Bean
 	CorsConfigurationSource corsConfigurationSource(
-			@Value("${app.cors.allowed-origin:http://http://10.20.10.9:8500}") String allowedOrigin) {
+			@Value("${app.cors.allowed-origin:https://liroseda.noudat.com}") String allowedOrigin) {
 		CorsConfiguration configuration = new CorsConfiguration();
 		configuration.setAllowedOrigins(List.of(allowedOrigin));
 		configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
