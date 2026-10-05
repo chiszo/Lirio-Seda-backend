@@ -33,7 +33,7 @@ public class Salida {
     @JoinColumn(name = "Usuario_idusuario", nullable = false)
     private Usuarios usuario;
 
-    @Column(name = "idsedesuario")
+    @Column(name = "idsedeusuario")
     private Integer idSedeUsuario;
 
     @ManyToOne(fetch = FetchType.LAZY)

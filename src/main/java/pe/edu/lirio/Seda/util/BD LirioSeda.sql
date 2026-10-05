@@ -109,7 +109,7 @@ CREATE TABLE Rol (
 CREATE TABLE Salida (
     idsalida          VARCHAR(10) NOT NULL,
     fechasalida       DATE,
-    idsedesuario      INT,
+    idsedeusuario     INT,
     Motivo_idmotivo   INT NOT NULL,
     Usuario_idusuario INT NOT NULL,
     PRIMARY KEY (idsalida)
